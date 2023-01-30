@@ -1,125 +1,114 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Routes, Route } from "react-router-dom";
+import Drawer from "./components/Drawer";
+import Header from "./components/Header";
+import Home from "./pages/Home";
+import Favorites from "./pages/Favorites";
+
 function App() {
+  const [items, setItems] = useState([]);
+  const [cartItems, setCartItems] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [cartOpened, setCartOpened] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      const itemsResponse = await axios.get(
+        "https://63d3c6d4c1ba499e54c87ed2.mockapi.io/items"
+      );
+
+      const cartItemsResponse = await axios.get(
+        "https://63d3c6d4c1ba499e54c87ed2.mockapi.io/cart"
+      );
+
+      setIsLoading(false);
+      setCartItems(cartItemsResponse.data);
+      setItems(itemsResponse.data);
+    }
+    fetchData();
+  }, []);
+
+  const onAddToCart = (obj) => {
+    if (cartItems.find((item) => String(item.id) === String(obj.id))) {
+      axios.delete(
+        `https://63d3c6d4c1ba499e54c87ed2.mockapi.io/cart/${obj.id}`
+      );
+      setCartItems((prev) =>
+        prev.filter((item) => String(item.id) !== String(obj.id))
+      );
+    } else {
+      axios.post("https://63d3c6d4c1ba499e54c87ed2.mockapi.io/cart", obj);
+      setCartItems((prev) => [...prev, obj]);
+    }
+  };
+  const onRemoveItemInCart = (id) => {
+    axios.delete(`https://63d3c6d4c1ba499e54c87ed2.mockapi.io/cart/${id}`);
+    setCartItems((prev) =>
+      prev.filter((item) => String(item.id) !== String(id))
+    );
+  };
+
+  const onChangeSearchInput = (event) => {
+    setSearchValue(event.target.value);
+  };
+
+  const onAddToFavorite = (obj) => {
+    if (favorites.find((item) => String(item.id) === String(obj.id))) {
+      setFavorites((prev) =>
+        prev.filter((item) => String(item.id) !== String(obj.id))
+      );
+    } else {
+      setFavorites((prev) => [...prev, obj]);
+    }
+  };
   return (
     <div className="wrapper">
-      <header className="header">
-        <div className="headerLeft">
-          <img width={40} height={40} src="/img/logo.png" alt="logo" />
-          <div className="headerInfo">
-            <h3>React sneakers</h3>
-            <p>Магазин лучших кроссовок</p>
-          </div>
-        </div>
-        <ul className="headerRight">
-          <li className="headerRight__cart">
-            <img src="/img/cart.svg" alt="cart" />
-            <span>1205 руб.</span>
-          </li>
-          <li className="headerRight__user">
-            <img src="/img/user.svg" alt="user-svg" />
-          </li>
-        </ul>
-      </header>
-      <div className="content">
-        <h1>Все кроссовки</h1>
-        <div className="sneakers-container">
-          {/* card 1 */}
-          <div className="card">
-            <img
-              width={133}
-              height={112}
-              src="/img/sneakers/1.jpg"
-              alt="Sneakers"
-            ></img>
-            <h5>Мужские Кроссовки Nike Blazer Mid Suede</h5>
-            <div className="card__bottom">
-              <div className="card__bottom__cost">
-                <span>Цена:</span>
-                <b>12 999 руб</b>
-              </div>
-              <button className="button">
-                <img
-                  width={11}
-                  height={11}
-                  src="/img/plus.png"
-                  alt="plus icon"
-                />
-              </button>
-            </div>
-          </div>
-          {/* card 2 */}
-          <div className="card">
-            <img
-              width={133}
-              height={112}
-              src="/img/sneakers/2.jpg"
-              alt="Sneakers"
-            ></img>
-            <h5>Мужские Кроссовки Nike Air Max 270</h5>
-            <div className="card__bottom">
-              <div className="card__bottom__cost">
-                <span>Цена:</span>
-                <b>12 999 руб</b>
-              </div>
-              <button className="button">
-                <img
-                  width={11}
-                  height={11}
-                  src="/img/plus.png"
-                  alt="plus icon"
-                />
-              </button>
-            </div>
-          </div>
-          {/* card 3 */}
-          <div className="card">
-            <img
-              width={133}
-              height={112}
-              src="/img/sneakers/3.jpg"
-              alt="Sneakers"
-            ></img>
-            <h5>Мужские Кроссовки Nike Blazer Mid Suede</h5>
-            <div className="card__bottom">
-              <div className="card__bottom__cost">
-                <span>Цена:</span>
-                <b>12 999 руб</b>
-              </div>
-              <button className="button">
-                <img
-                  width={11}
-                  height={11}
-                  src="/img/plus.png"
-                  alt="plus icon"
-                />
-              </button>
-            </div>
-          </div>
-          {/* card 4 */}
-          <div className="card">
-            <img
-              width={133}
-              height={112}
-              src="/img/sneakers/4.jpg"
-              alt="Sneakers"
-            ></img>
-            <h5>Кроссовки Puma X Aka Boku Future Rider</h5>
-            <div className="card__bottom">
-              <div className="card__bottom__cost">
-                <span>Цена:</span>
-                <b>12 999 руб</b>
-              </div>
-              <button className="button">
-                <img
-                  width={11}
-                  height={11}
-                  src="/img/plus.png"
-                  alt="plus icon"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      {cartOpened ? (
+        <Drawer
+          onClose={() => {
+            setCartOpened(false);
+          }}
+          items={cartItems}
+          onRemoveItem={onRemoveItemInCart}
+        />
+      ) : null}
+      <Header
+        onClickCart={() => {
+          setCartOpened(true);
+        }}
+      />
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home
+              items={items}
+              cartItems={cartItems}
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              onChangeSearchInput={onChangeSearchInput}
+              onAddToFavorite={onAddToFavorite}
+              onAddToCart={onAddToCart}
+              isLoading={isLoading}
+            />
+          }
+        ></Route>
+        <Route
+          path="/favorites"
+          element={
+            <Favorites
+              items={favorites}
+              onAddToFavorite={onAddToFavorite}
+              onAddToCart={onAddToCart}
+            />
+          }
+        ></Route>
+      </Routes>
     </div>
   );
 }

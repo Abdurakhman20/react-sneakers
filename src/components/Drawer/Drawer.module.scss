@@ -1,0 +1,140 @@
+.overlay {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.drawer {
+  position: absolute;
+  width: 420px;
+  height: 100%;
+  right: 0;
+  background: #ffffff;
+  box-shadow: -10px 4px 24px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  h2 {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+  .cartItems {
+    flex: 1;
+    overflow: auto;
+    margin-bottom: 40px;
+  }
+}
+
+.cartItem {
+  display: flex;
+  align-items: center;
+  border: 1px solid #f3f3f3;
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 20px;
+  margin-bottom: 20px;
+  &__sneakersImg {
+    height: 70px;
+    width: 70px;
+    margin-right: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 0 10px;
+  }
+  &__infoBox {
+    margin-right: 20px;
+    p {
+      margin: 0;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+    b {
+      font-size: 14px;
+    }
+  }
+}
+
+.cartTotalBlock {
+  ul {
+    display: block;
+    margin-bottom: 40px !important;
+    li {
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 20px;
+      div {
+        flex: 1;
+        height: 1px;
+        border-bottom: 1px dashed #dfdfdf;
+        position: relative;
+        top: -4px;
+        margin: 0 10px;
+      }
+    }
+  }
+  .greenButton {
+    position: relative;
+    &:hover {
+      img {
+        transform: translateX(5px);
+      }
+    }
+    img {
+      position: absolute;
+      right: 30px;
+      top: 20px;
+      transition: transform 0.2s ease-in-out;
+    }
+  }
+}
+.greenButton {
+  width: 100%;
+  height: 55px;
+  background-color: #9dd558;
+  border-radius: 18px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  &:hover {
+    background: lighten(#9dd558, 7%);
+  }
+  &:active {
+    background: darken(#9dd558, 10%);
+  }
+}
+
+.cartEmpty {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+  p {
+    width: 280px;
+    line-height: 24px;
+    opacity: 0.6;
+  }
+  .greenButton {
+    width: 245px;
+    margin-top: 20px;
+    img {
+      margin-right: 10px;
+      transition: transform 0.2s ease-in-out;
+    }
+    &:hover {
+      img {
+        transform: translatex(-5px);
+      }
+    }
+  }
+}
