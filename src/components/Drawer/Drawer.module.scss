@@ -110,31 +110,8 @@
   &:active {
     background: darken(#9dd558, 10%);
   }
-}
-
-.cartEmpty {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  flex-direction: column;
-  flex: 1;
-  p {
-    width: 280px;
-    line-height: 24px;
-    opacity: 0.6;
-  }
-  .greenButton {
-    width: 245px;
-    margin-top: 20px;
-    img {
-      margin-right: 10px;
-      transition: transform 0.2s ease-in-out;
-    }
-    &:hover {
-      img {
-        transform: translatex(-5px);
-      }
-    }
+  &:disabled {
+    background-color: #bebebe;
+    cursor: default !important;
   }
 }

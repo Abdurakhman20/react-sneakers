@@ -17,7 +17,6 @@ const Home = ({
     return (isLoading ? [...Array(8)] : filteredItems).map((item, index) => (
       <Card
         key={index}
-        added={cartItems.some((obj) => String(obj.id) === String(item.id))}
         onClickFavoriteBtn={(obj) => onAddToFavorite(obj)}
         onClickAddBtn={(obj) => onAddToCart(obj)}
         loading={isLoading}
